@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block title %}
+    Annonces
+{% endblock %}
+
+{% block content %}
+    <!-- SEARCH BAR -->
+    <div id="main" class="pb-3 col-span-12 md:col-span-8 px-7 space-y-5">
+        <div class="flex justify-between items-end mb-10">
+                <form id="order_form" class="m-0" method="get">
+                    <select class="focus:outline-none cursor-pointer px-5 py-1 rounded-lg shadow-md text-sm text-blue-700">
+                        <option class="cursor-pointer" {% if ordering == 'newest' %} selected {% endif %} value="newest">Recentes</option>
+                        <option class="cursor-pointer" {%if ordering == 'most_liked' %} selected {% endif %} value="most_liked">Plus Aimées</option>
+                    </select>
+                    <input hidden name="order" id="order" value=""/>
+                </form>
+                <form class="items-center shadow-md hidden md:inline-flex focus:ring rounded-lg px-2 mb-0">
+                    <input type="text" class="focus:outline-none" placeholder="chercher" value="">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 r text-blue-500" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                        <input type="submit" hidden/>
+                    </form>
+                </div>
+                <!-- AD ITEMS -->
+                {% for post  in posts %}
+                    <div class="p-4 shadow-lg rounded-lg relative sm:grid space-x-2 grid-cols-12 items-center">
+                        <div class="w-10 h-10 bg-gray-600 ring-4 ring-blue-300 col-span-1 rounded-full absolute -left-5 -top-0.5 md:relative md:-left-0 md:w-14 md:h-14"></div>
+                        <div class="col-span-10 text-sm pl-5 flex flex-col">
+                            <span>
+                                <a class="hover:text-blue-600 font-bold text-md md:text-lg truncate" href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+                            </span>
+                            <span class="text-gray-500 text-xs ml-5">
+                                published
+                                {{ post.published | timesince }}
+                                ago
+                            </span>
+                            <p class="text-gray-750 mt-1">
+                                {{ post.body|truncatechars:200 }}</p>
+                            <div class="flex justify-between items-center mt-2">
+                                {% if post.price > 0 %}
+                                    <span class="bg-green-900 text-white px-2 rounded-lg font-bold right-5 -bottom-2 text-xs sm:text-sm ring-2">
+                                        {{ post.price }}
+                                        fcfa
+                                    </span>
+                                {% endif %}
+                                <span class="flex space-x-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-600" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"/>
+                                    </svg>
+                                    <span class="text-xs text-gray-600">12 Commentaires
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <span class="absolute bg-purple-900 text-white px-2 rounded-lg font-bold right-5 -top-2 text-sm ring-2">
+                            {{ post.category }}
+                        </span>
+                    </div>
+                {% endfor %}
+                
+            </div>
+{% endblock %}
+{% block script %}
+
+    const select = document.querySelector('select');
+    select.addEventListener('change', function(e){
+        const form = document.querySelector('#order_form');
+        const input = document.querySelector("#order");
+        input.value = e.target.value
+        form.submit();
+    })
+
+{% endblock %}
