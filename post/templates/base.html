@@ -8,8 +8,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'style.css' %}"/>
+    <script
+        src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous">
+    </script>
 </head>
-<body onload="myFunction()">
+<body class="" onload="myFunction()">
+
     <header class="flex justify-between px-7 py-3 shadow-lg">
         <a href="{% url 'post:post_list' %}" class="decoration font-mono text-xl font-bold tracking-wider text-green-700 transition duration-50 transform hover:scale-110 cursor-pointer animate-pulse">Samannonce</a>
         <div class="hidden md:flex space-x-4">
@@ -34,6 +40,7 @@
         </div>
     </header>
 
+    {% block main %}
     <section class="grid grid-cols-12 pt-7 max-w-6xl m-auto h-full relative">
         {% if messages %}
             <ul class="messages">
@@ -42,10 +49,11 @@
                 {% endfor %}
             </ul>
         {% endif %}
-        {% block content %}{% endblock %}
+        {% block content %}
+        {% endblock %}
         {% block sidebar %}
                 <!-- SIDEMENU -->
-            <div id="sidemenu" class="invisible bg-white fixed pt-20 right-0 -top-0 bottom-0 shadow-2xl md:relative md:visible md:col-span-3 md:pt-0 md:shadow-none flex flex-col flex-shrink-0 lg:col-end-13 px-3">
+            <div id="sidemenu" class="invisible  bg-white fixed pt-20 right-0 -top-0 bottom-0 shadow-2xl md:relative md:visible md:col-span-3 md:pt-0 md:shadow-none flex flex-col flex-shrink-0 lg:col-end-13 px-3">
                 <!-- CLOSE SIDEBAR -->
                 <svg id="dismiss" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 md:invisible absolute top-5 text-red-500 bg-gray-300 rounded-full font-bold cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -103,16 +111,18 @@
                     </div>
                 {% endif %}
             </div>
-            <div id="modal" class="invisible w-3/4 min-w-sm max-w-sm bg-white absolute top-1/4 flex flex-col left-1/2 transform -translate-x-1/2">
-                {% post_modal %}
-            </div>
         {% endblock %}
         
     </section>
-    
+    {% endblock %}
+
+    <div id="modal" class="backdrop-filter backdrop-blur-lg backdrop-brightness-50 h-full invisible absolute top-0 left-0 right-0 bottom-0 flex justify-center items-end">
+        {% post_modal %}
+    </div>
     
     <script>
         const myFunction = () => {
+            {% block script %}{% endblock %}
             const toggler = document.querySelector("#sidebar");
                     toggler.addEventListener("click", (e) => {
                         e.preventDefault();
@@ -151,9 +161,6 @@
                         modal.classList.add("invisible");
                         sidebar.classList.add("invisible");
                     })
-
-            {% block script %}
-            {% endblock %}
         }
     </script>
 </body>

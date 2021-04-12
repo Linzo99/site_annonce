@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+{% load post_tags %}
+
+{% block main %}
+    <section
+        class=" flex flex-col space-x-5 md:grid items-start px-5 pt-7 max-w-6xl m-auto h-full">
+        <!-- PROFILE COMPONENT-->
+        <div
+            class="mx-auto mb-7 col-span-12 shadow-xl rounded-xl py-2 px-4 space-y-3 border-t-2 border-blue-600 md:col-span-4 md:border-t-0 md:border-l-2 max-w-sm">
+            <!-- profile photo -->
+            <img class="w-32 h-32 bg-gray-300 rounded-full mx-auto"></img>
+            <div class="p-2 flex flex-col space-y-2">
+                <span class="font-bold text-center">
+                    {{ request.user.first_name }}
+                </span>
+                <span id="edit_profile" class="flex justify-between text-sm font-bold">
+                    <p>A Propos</p>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hover:text-blue-600 duration-100 transform hover:scale-110 cursor-pointer " fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                    </svg>
+                </span>
+                <p class="text-sm pl-1 truncat text-gray-500">
+                    “Tailwind CSS is the only framework that I've seen scale
+                                on large teams. It’s easy to customize, adapts to any design,
+                                and the build size is tiny.”
+                </p>
+                <div class="flex flex-col space-y-1">
+                    <span class="flex justify-between">
+                        <p class="text-sm">
+                            email
+                        </p>
+                        <p class="text-sm text-gray-500">
+                            {{ request.user.email }}
+                        </p>
+                    </span>
+                    <span class="flex justify-between items-end">
+                        <p class="text-sm">
+                            Tel
+                        </p>
+                        <p class="text-sm text-gray-500">
+                            784670118
+                        </p>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <!-- ANNONCES -->
+        <div class="mx-auto col-span-12 md:col-span-7 md:col-end-13">
+            {% for post in posts %}
+                <div class="posts mb-7 p-4 shadow-lg rounded-lg relative">
+                    <div class="col-span-10 text-sm pl-5 flex flex-col">
+                        <span class="flex space-x-5 items-center space-y-1">
+                            <a class="hover:text-blue-600 font-bold text-md md:text-lg truncate" href="{{ post.get_absolute_url }}">{{ post.title|truncatechars:50 }}</a>
+                            <a href="{% url 'post:post_delete' post.id %}" class="flex">
+                                <span class="invisible md:visible text-red-600 underline">supprimer</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-700" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                                </svg>
+                            </a>
+                            <span class="edits flex" index="{{ post.id }}">
+                                <span class="invisible md:visible text-blue-600 underline" >modifier</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                                </svg>
+                            </span>
+                        </span>
+                        <span class="text-gray-500 text-xs ml-5">
+                            published
+                            {{ post.published | timesince }}
+                            ago
+                        </span>
+                        <p class="text-gray-750 mt-1">
+                            {{ post.body|truncatechars:200 }}</p>
+                        <div class="flex justify-between items-center mt-2">
+                            {% if post.price > 0 %}
+                                <span class="bg-green-900 text-white px-2 rounded-lg font-bold right-5 -bottom-2 text-xs sm:text-sm ring-2">
+                                    {{ post.price }}
+                                    fcfa
+                                </span>
+                            {% endif %}
+                            <span class="flex space-x-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-600" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"/>
+                                </svg>
+                                <span class="text-xs text-gray-600">12 Commentaires
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                    <span class="absolute bg-purple-900 text-white px-2 rounded-lg font-bold right-5 -top-2 text-sm ring-2">
+                        {{ post.category }}
+                    </span>
+                </div>
+                {% empty %}
+                <span class="w-full bg-green-600 float-right py-2 px-3 text-center text-white font-bold">
+                    Vous navez pas encore d'annonce
+                </span>
+            {% endfor %}
+        </div>
+        <div
+            id="sidemenu" class="invisible bg-white fixed pt-20 right-0 -top-0 bottom-0 shadow-2xl md:hidden flex flex-col px-3">
+            <!-- CLOSE SIDEBAR -->
+            <svg id="dismiss" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 md:invisible absolute top-5 text-red-500 bg-gray-300 rounded-full font-bold cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+            <!-- SEARCH -->
+            <form class="items-center shadow-md md:hidden flex focus:ring rounded-lg px-2 mb-3">
+                <input type="text" class="focus:outline-none" placeholder="chercher" value="">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 r text-blue-500" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                    <input type="submit" hidden/>
+                </form>
+                <input id="new_post" type="button" class="cursor-pointer bg-green-500 mb-3 shadow-lg text-white font-bold px-3 py-1 rounded-lg" value="Nouvelle annonce">
+                    <div class="divide-y divide-green-500">
+                        <div class="list-none py-2">
+                            <a href="{% url 'post:post_list' %}" class="{% if not slug %} bg-gray-200 {% endif %}flex space-x-2 items-center pl-1 hover:bg-gray-200 cursor-pointer">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+                                </svg>
+                                <span class="{% if not slug %} text-sm py-1 text-blue-600 font-bold {% endif %}">
+                                    Toutes les annonces
+                                </span>
+                            </a>
+                            <a class="flex space-x-2 items-center pl-1 hover:bg-gray-200 cursor-pointer">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-500" viewbox="0 0 20 20" fill="currentColor">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                </svg>
+                                <li class="text-sm py-1">
+                                    annonces marquées
+                                </li>
+                            </a>
+                        </div>
+                        <div class="list-none">
+                            {% for cat in categories %}
+                                <a href="{{ cat.get_absolute_url }}" class="{% if slug == cat.slug %} bg-gray-200 {% endif %} flex space-x-2 items-center pl-1 hover:bg-gray-200 rounded-md cursor-pointer">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-900" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ cat.icon_url }}"/>
+                                    </svg>
+                                    <span class="{% if slug == cat.slug %}text-blue-600 font-bold {% else %} text-sm py-1 {% endif %}">{{ cat.name }}</span>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% if request.user.is_authenticated %}
+                        <a href="{% url 'account:logout' %}" class="md:hidden absolute bottom-5 duration-100 transform hover:scale-110 text-gray-600 text-sm cursor-pointer flex items-center space-x-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                            </svg>
+                            <span class="text-red-600">Deconnexion</span>
+                        </a>
+                    {% else %}
+                        <div class="flex justify-around mt-7 md:hidden">
+                            <a href="{% url 'account:register' %}" class="text-gray-600 text-sm hover:text-green-700 cursor-pointer">Inscription</a>
+                            <a href="{% url 'account:login' %}" class="text-gray-600 text-sm hover:text-green-700 cursor-pointer">Connexion</a>
+                        </div>
+                    {% endif %}
+                </div>
+    </section>
+    <div id="modal" class="px-5 backdrop-filter backdrop-blur-lg backdrop-brightness-50 h-screen invisible absolute top-0 left-0 right-0 bottom-0 flex justify-center items-end">
+        {% post_modal %}
+    </div>
+    <div id="edit_modal" class="px-5 backdrop-filter backdrop-blur-lg backdrop-brightness-50 h-screen invisible absolute top-0 left-0 right-0 bottom-0 flex justify-center items-end">
+    </div>
+    <div id="profile_modal" class="px-5 backdrop-filter backdrop-blur-lg backdrop-brightness-50 h-screen invisible absolute top-0 left-0 right-0 bottom-0 flex justify-center items-end">
+    </div>
+{% endblock %}
+{% block script %}
+    $(".edits").on("click",function(e){
+        e.preventDefault()
+        $("#edit_modal").load("/annonces/"+$(this).attr('index')+"/edit/")
+        $("#edit_modal").toggleClass('invisible')
+    });
+    $("#edit_profile").on("click",function(e){
+        $("#profile_modal").load("{% url 'account:edit' %}")
+        $("#profile_modal").toggleClass('invisible')
+    });
+{% endblock %}

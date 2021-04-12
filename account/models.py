@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 
 # Create your models here.
 class Profile(models.Model):
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='profile')
+    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
     date_of_birth = models.DateField(blank=True, null=True)
     photo = models.ImageField(upload_to='user/%Y/%m/%d', blank=True)
 

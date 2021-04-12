@@ -1,13 +1,23 @@
-from django.shortcuts import render
-from .models import Post
-from .forms import PostForm
-from django.utils.text import slugify
-from django.views.generic.edit import ModelFormMixin
-from django.views.generic import RedirectView
-from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView, DetailView, CreateView
-# Create your views here.
+from django.shortcuts import render
+from django.urls import reverse_lazy
+from django.utils.text import slugify
+from django.views import View
+from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
+                                  UpdateView)
+from django.views.generic.edit import ModelFormMixin
+
+from .forms import PostForm
+from .models import Post
+
+# MIXINS HERE
+
+class OwnerMixin(LoginRequiredMixin):
+    model = Post
+    success_url = reverse_lazy('account:profile')
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.filter(author=self.request.user)
 
 
 class PostListView(ListView):
@@ -43,12 +53,11 @@ class PostListView(ListView):
     #def get_ordering(self):
         
 
-
-
 class PostDetailView(DetailView):
     model = Post
     template_name = 'post/post_detail.html'
     context_object_name = 'post'
+
 
 class PostCreateView(LoginRequiredMixin,CreateView):
     form_class = PostForm
@@ -61,4 +70,11 @@ class PostCreateView(LoginRequiredMixin,CreateView):
         return super().form_valid(form)
 
 
+class PostDeleteView(OwnerMixin, DeleteView):
+    
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
 
+class PostEditView(OwnerMixin, UpdateView):
+    template_name = 'post/post_edit_modal.html'
+    form_class = PostForm

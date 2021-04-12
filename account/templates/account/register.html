@@ -20,7 +20,7 @@
 
 {% block sidebar %}
     <!-- SIDEMENU -->
-    <div id="sidemenu" class="invisible bg-white absolute pt-20 right-0 -top-0 h-full shadow-2xl md:hidden md:visible md:col-span-3 md:pt-0 md:shadow-none flex flex-col lg:col-end-13 px-3">
+    <div id="sidemenu" class="invisible  bg-white fixed pt-20 right-0 -top-0 bottom-0 shadow-2xl md:hidden  flex flex-col flex-shrink-0 lg:col-end-13 px-3">
         <!-- CLOSE SIDEBAR -->
         <svg id="dismiss" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 md:invisible absolute top-5 text-red-500 bg-gray-300 rounded-full font-bold cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -33,7 +33,6 @@
             </svg>
             <input type="submit" hidden/>
         </form>
-        <input type="button" class="bg-green-500 mb-3 shadow-lg text-white font-bold px-3 py-1 rounded-lg" value="Nouvelle annonce">
         <div class="divide-y divide-green-500">
             <div class="list-none py-2">
                 <a href="{% url 'post:post_list' %}" class="{% if not slug %} bg-gray-200 {% endif %}flex space-x-2 items-center pl-1 hover:bg-gray-200 cursor-pointer">
