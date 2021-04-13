@@ -1,14 +1,12 @@
 {% extends 'base.html' %}
 {% load post_tags %}
+{% load thumbnail %}
 
-{% block main %}
-    <section
-        class=" flex flex-col space-x-5 md:grid items-start px-5 pt-7 max-w-6xl m-auto h-full">
-        <!-- PROFILE COMPONENT-->
-        <div
-            class="mx-auto mb-7 col-span-12 shadow-xl rounded-xl py-2 px-4 space-y-3 border-t-2 border-blue-600 md:col-span-4 md:border-t-0 md:border-l-2 max-w-sm">
+{% block content %}
+        <!-- PROFILE -->
+        <div class="mx-auto mb-7 col-span-12 shadow-xl rounded-xl py-2 px-4 space-y-3 border-t-2 border-blue-600 md:col-span-4 md:border-t-0 md:border-l-2 max-w-sm max-h-sm">
             <!-- profile photo -->
-            <img class="w-32 h-32 bg-gray-300 rounded-full mx-auto"></img>
+            <img src="{% thumbnail user.profile.photo 500x500 crop %}" class="w-32 h-32 bg-gray-300 rounded-full mx-auto"></img>
             <div class="p-2 flex flex-col space-y-2">
                 <span class="font-bold text-center">
                     {{ request.user.first_name }}
@@ -45,20 +43,20 @@
             </div>
         </div>
         <!-- ANNONCES -->
-        <div class="mx-auto col-span-12 md:col-span-7 md:col-end-13">
+        <div class="col-span-12 md:col-span-6 md:col-start-6">
             {% for post in posts %}
                 <div class="posts mb-7 p-4 shadow-lg rounded-lg relative">
                     <div class="col-span-10 text-sm pl-5 flex flex-col">
                         <span class="flex space-x-5 items-center space-y-1">
-                            <a class="hover:text-blue-600 font-bold text-md md:text-lg truncate" href="{{ post.get_absolute_url }}">{{ post.title|truncatechars:50 }}</a>
+                            <a class="hover:text-blue-600 font-bold text-xs md:text-lg truncate" href="{{ post.get_absolute_url }}">{{ post.title|truncatechars:50 }}</a>
                             <a href="{% url 'post:post_delete' post.id %}" class="flex">
-                                <span class="invisible md:visible text-red-600 underline">supprimer</span>
+                                <span class="invisible w-min md:visible text-red-600 underline">supprimer</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-700" viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/>
                                 </svg>
                             </a>
-                            <span class="edits flex" index="{{ post.id }}">
-                                <span class="invisible md:visible text-blue-600 underline" >modifier</span>
+                            <span class="cursor-pointer edits flex" index="{{ post.id }}">
+                                <span class="invisible w-min md:visible text-blue-600 underline" >modifier</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
                                 </svg>
@@ -97,6 +95,9 @@
                 </span>
             {% endfor %}
         </div>
+{% endblock %}
+
+{% block sidebar %}
         <div
             id="sidemenu" class="invisible bg-white fixed pt-20 right-0 -top-0 bottom-0 shadow-2xl md:hidden flex flex-col px-3">
             <!-- CLOSE SIDEBAR -->
@@ -155,16 +156,19 @@
                             <a href="{% url 'account:login' %}" class="text-gray-600 text-sm hover:text-green-700 cursor-pointer">Connexion</a>
                         </div>
                     {% endif %}
-                </div>
-    </section>
-    <div id="modal" class="px-5 backdrop-filter backdrop-blur-lg backdrop-brightness-50 h-screen invisible absolute top-0 left-0 right-0 bottom-0 flex justify-center items-end">
+        </div>
+{% endblock %}
+
+{% block modals %}
+    <div id="modal" class="invisible absolute bg-black top-0 left-0 bottom-0 right-0 bg-opacity-60 flex justify-center items-center">
         {% post_modal %}
     </div>
-    <div id="edit_modal" class="px-5 backdrop-filter backdrop-blur-lg backdrop-brightness-50 h-screen invisible absolute top-0 left-0 right-0 bottom-0 flex justify-center items-end">
+    <div id="edit_modal" class="invisible absolute bg-black top-0 left-0 bottom-0 right-0 bg-opacity-60 flex justify-center items-center">
     </div>
-    <div id="profile_modal" class="px-5 backdrop-filter backdrop-blur-lg backdrop-brightness-50 h-screen invisible absolute top-0 left-0 right-0 bottom-0 flex justify-center items-end">
+    <div id="profile_modal" class="invisible absolute bg-black top-0 left-0 bottom-0 right-0 bg-opacity-60 flex justify-center items-center">
     </div>
 {% endblock %}
+
 {% block script %}
     $(".edits").on("click",function(e){
         e.preventDefault()

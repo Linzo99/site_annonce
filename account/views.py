@@ -50,6 +50,11 @@ class ProfileView(OwnerMixin, ListView):
     model = Post
     template_name = 'account/profile/dashboard.html'
     context_object_name = 'posts'
+    
+    def get_context_data(self):
+        context = super().get_context_data()
+        context['user'] = self.request.user
+        return context
 
 @login_required
 def edit_user(req):

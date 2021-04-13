@@ -1,21 +1,21 @@
 {% extends 'base.html' %}
-
+{% load thumbnail %}
 {% block content %}
     <!-- DETAIL SIDE -->
-    <div id="main" class="pb-5 reltative col-span-12 md:col-span-8 px-7">
+    <div id="main" class="pb-5 reltative col-span-12 md:col-span-8 px-4">
         <!-- card -->
         <div
             class="shadow-lg p-4 flex flex-col space-y-1">
             <!-- head -->
             <div class="flex justify-between items-center mb-2">
                 <div class="flex space-x-3 ">
-                    <span class="w-12 h-12 bg-gray-400"></span>
+                    <img src="{% thumbnail post.author.profile.photo 200x200 %}" class="w-12 h-12 bg-gray-400"/>
                     <h2 class="font-bold">{{ post.author }}</h2>
                 </div>
                 <button class="text-xs sm:text-sm truncate font-bold border-2 px-3 text-green-500 border-green-500 rounded-md">FOLLOW</button>
             </div>
             <!-- detail -->
-            <p class="text-lg ">{{ post.body }}</p>
+            <p class="text-xs sm:text-lg">{{ post.body }}</p>
             <span class="text-sm text-gray-500">
                 {{ post.published }}
             </span>
@@ -45,7 +45,7 @@
             </span>
             <!-- comments container -->
             <div
-                class="ml-10 border-l border-gray-400 pl-2 space-y-3">
+                class="ml-10 border-l border-gray-400 pl-1 space-y-3">
                 <!-- comment -->
                 <div class="grid grid-cols-8">
                     <span class="w-10 h-10 bg-gray-400 rounded-full"></span>

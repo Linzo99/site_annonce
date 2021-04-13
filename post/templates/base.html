@@ -14,12 +14,18 @@
         crossorigin="anonymous">
     </script>
 </head>
-<body class="" onload="myFunction()">
+<body class="relative grid" onload="myFunction()">
 
     <header class="flex justify-between px-7 py-3 shadow-lg">
         <a href="{% url 'post:post_list' %}" class="decoration font-mono text-xl font-bold tracking-wider text-green-700 transition duration-50 transform hover:scale-110 cursor-pointer animate-pulse">Samannonce</a>
         <div class="hidden md:flex space-x-4">
             {% if request.user.is_authenticated %}
+                <a href="{% url 'account:profile' %}" class=" duration-100 transform hover:scale-110 text-gray-600 text-sm cursor-pointer flex items-center space-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd" />
+                      </svg>
+                    <span class="text-blue-600">Profile</span> 
+                </a>
                 <a href="{% url 'account:logout' %}" class=" duration-100 transform hover:scale-110 text-gray-600 text-sm cursor-pointer flex items-center space-x-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -40,8 +46,8 @@
         </div>
     </header>
 
-    {% block main %}
-    <section class="grid grid-cols-12 pt-7 max-w-6xl m-auto h-full relative">
+    {% block body %}
+    <section class="grid grid-cols-12 pt-7 max-w-6xl m-auto h-full px-4">
         {% if messages %}
             <ul class="messages">
                 {% for message in messages %}
@@ -53,11 +59,19 @@
         {% endblock %}
         {% block sidebar %}
                 <!-- SIDEMENU -->
-            <div id="sidemenu" class="invisible  bg-white fixed pt-20 right-0 -top-0 bottom-0 shadow-2xl md:relative md:visible md:col-span-3 md:pt-0 md:shadow-none flex flex-col flex-shrink-0 lg:col-end-13 px-3">
+            <div id="sidemenu" class="invisible bg-white fixed pt-20 right-0 -top-0 bottom-0 shadow-2xl md:relative md:visible md:col-span-3 md:pt-0 md:shadow-none flex flex-col flex-shrink-0 lg:col-end-13 px-3">
                 <!-- CLOSE SIDEBAR -->
                 <svg id="dismiss" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 md:invisible absolute top-5 text-red-500 bg-gray-300 rounded-full font-bold cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'account:profile' %}" class="md:hidden mb-7 text-gray-600 text-sm cursor-pointer flex items-center space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd" />
+                        </svg>
+                        <span class="text-blue-600">Profile</span> 
+                    </a>
+                {% endif %}
                 <!-- SEARCH -->
                 <form class="items-center shadow-md md:hidden flex focus:ring rounded-lg px-2 mb-3">
                     <input type="text" class="focus:outline-none" placeholder="chercher" value="">
@@ -114,11 +128,14 @@
         {% endblock %}
         
     </section>
-    {% endblock %}
 
-    <div id="modal" class="backdrop-filter backdrop-blur-lg backdrop-brightness-50 h-full invisible absolute top-0 left-0 right-0 bottom-0 flex justify-center items-end">
+    {% block modals %}
+    <div id="modal" class="invisible absolute bg-black top-0 left-0 bottom-0 right-0 bg-opacity-60 flex justify-center items-center">
         {% post_modal %}
     </div>
+    {% endblock %}
+
+    {% endblock %}
     
     <script>
         const myFunction = () => {
@@ -155,12 +172,15 @@
                     
 
                     const body = document.querySelector('#main')
-                    body.addEventListener('click', (e)=>{
+                    if(body){
+                        body.addEventListener('click', (e)=>{
                         const sidebar = document.querySelector("#sidemenu");
                         const modal = document.querySelector("#modal");
                         modal.classList.add("invisible");
                         sidebar.classList.add("invisible");
-                    })
+                        })
+                    }
+                    
         }
     </script>
 </body>
