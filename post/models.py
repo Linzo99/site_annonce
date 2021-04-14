@@ -58,7 +58,7 @@ class Comment(models.Model):
     likes = models.ManyToManyField(get_user_model(), related_name="comments_liked", blank=True)
 
     class Meta:
-        ordering = ('created',)
+        ordering = ('-created',)
 
     def __str__(self):
         return f"Commented by {self.name}"

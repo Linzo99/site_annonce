@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load thumbnail %}
+{% load form_tags %}
 {% block content %}
     <!-- DETAIL SIDE -->
     <div id="main" class="pb-5 reltative col-span-12 md:col-span-8 px-4">
@@ -30,7 +31,7 @@
                     </svg>
                 </span>
                 <span class="flex space-x-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg id="comment" xmlns="http://www.w3.org/2000/svg" class="cursor-pointer h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
                     </svg>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" viewBox="0 0 20 20" fill="currentColor">
@@ -40,41 +41,50 @@
             </div>
         </div>
         <div class="mt-3 space-y-2">
+            {% with post.comments as comments %}
             <span class="font-bold text-sm">
-                Commentaires
+                {{ comments.count }} Commentaire{{ comments.count|pluralize }}
             </span>
             <!-- comments container -->
-            <div
-                class="ml-10 border-l border-gray-400 pl-1 space-y-3">
+            <div class="ml-5 md:ml-10 border-l border-gray-400 pl-1 space-y-3">
+                <!-- FORM -->
+                <form action="{% url 'post:post_comment' %}" id="form" method="post" class="hidden sm:w-min flex flex-col px-4 space-y-1">
+                    {% for field in form %}
+                        <div class="flex flex-col sm:items-end space-x-1 sm:flex-row">
+                            {% if field|input_type != 'Textarea' %}
+                                {{ field.label_tag }}
+                            {% endif %}
+                            {{ field | add_classes:"focus:outline-none border-2 border-gray-300"}}
+                        </div>
+                    {% endfor %}
+                    <input hidden name="id" value="{{ post.id }}"/>
+                    <input class="self-end cursor-pointer w-min  bg-green-500 shadow-lg text-white font-bold px-3 py-1 rounded-lg" type="submit" value="Envoyer"/>
+                    {% csrf_token %}
+                </form>
                 <!-- comment -->
-                <div class="grid grid-cols-8">
-                    <span class="w-10 h-10 bg-gray-400 rounded-full"></span>
-                    <div class="flex flex-col col-span-7 mt-3">
-                        <span class="font-bold text-sm">Kounta</span>
+                {% for comment in comments.all %}
+                <div class="flex space-x-2">
+                    <span class="w-10 h-10 bg-gray-400 flex-shrink-0 rounded-full"></span>
+                    <div class="flex flex-col col-span-7 col-start-3">
+                        <span class="font-bold text-sm">{{ comment.name }}</span>
                         <span class="text-sm pl-2 text-gray-500">
-                            il y'a 5 minutes</span>
+                            published {{ comment.created|timesince }} ago</span>
                         <p class="text-xs sm:text-sm">
-                            Athieu fils bii mom amna solo, mais defko le soir si possible
+                            {{ comment.body }}
                         </span>
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
                             <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"/>
                         </svg>
                     </div>
                 </div>
-                <div class="grid grid-cols-8">
-                    <span class="w-10 h-10 bg-gray-400 rounded-full "></span>
-                    <div class="flex flex-col col-span-7 mt-3">
-                        <span class="font-bold text-sm">OumarSOnko</span>
-                        <span class="text-sm pl-2 text-gray-500">
-                            il y'a 4 minutes</span>
-                        <p class="text-xs sm:text-sm flex-grow-0">Waw le soir yaakarna moo geune kw, matin bi ak cours yi moy lolu kw .
-                            Sinn cotisation bi meunooko wagni</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"/>
-                        </svg>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
+            {% endwith %}
         </div>
     </div>
+{% endblock %}
+{% block script %}
+   $("#comment").on("click", (e)=>{
+       $("#form").toggleClass("hidden")
+   })
 {% endblock %}
